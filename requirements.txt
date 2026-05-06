@@ -8,5 +8,4 @@ pytest
 flake8
 ipython
 #### Add text to install the python-package here
-sqlite3
 pandas
