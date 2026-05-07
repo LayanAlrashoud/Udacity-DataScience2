@@ -1,69 +1,55 @@
-# Import the QueryBase class
+from typing import List, Tuple, Any
+import pandas as pd
 from .query_base import QueryBase
-
-# Import dependencies needed for sql execution
-# from the `sql_execution` module
 from .sql_execution import SQLExecutionMixin
 
-# Define a subclass of QueryBase
-# called Employee
 class Employee(QueryBase):
-
-    # Set the class attribute `name`
-    # to the string "employee"
-    name = "employee"
-
-    # Define a method called `names`
-    # that receives no arguments
-    # This method should return a list of tuples
-    # from an sql execution
-    def names(self):
-        
-        # Query 3
-        # Write an SQL query
-        # that selects two columns 
-        # 1. The employee's full name
-        # 2. The employee's id
-        # This query should return the data
-        # for all employees in the database
-        query = f"SELECT first_name || ' ' || last_name, employee_id FROM {self.name}"
-        
-        # تنفيذ الاستعلام وإرجاع قائمة tuples (تحويل DF إلى قائمة)
-        return list(self.run_query(query).itertuples(index=False, name=None))
+    """
+    Employee class to handle specific database queries for employee data.
+    """
     
+    # Class attribute for the table name
+    name: str = "employee"
 
-    # Define a method called `username`
-    # that receives an `id` argument
-    # This method should return a list of tuples
-    # from an sql execution
-    def username(self, id):
+    def names(self) -> List[Tuple[str, int]]:
+        """
+        Retrieves a list of all employees' full names and their IDs.
+        Returns:
+            List[Tuple[str, int]]: A list containing tuples of (full_name, employee_id).
+        """
+        query: str = f"SELECT first_name || ' ' || last_name, employee_id FROM {self.name}"
         
-        # Query 4
-        # Write an SQL query
-        # that selects an employees full name
-        # Use f-string formatting and a WHERE filter
-        # to only return the full name of the employee
-        # with an id equal to the id argument
-        query = f"SELECT first_name || ' ' || last_name FROM {self.name} WHERE employee_id = {id}"
+        # We use run_query and convert the result to a list of tuples
+        result_df: pd.DataFrame = self.run_query(query)
+        return list(result_df.itertuples(index=False, name=None))
+
+    def username(self, employee_id: int) -> List[Tuple[str]]:
+        """
+        Retrieves the full name of a specific employee by their ID.
+        Args:
+            employee_id (int): The unique identifier for the employee.
+        Returns:
+            List[Tuple[str]]: A list containing a tuple with the employee's full name.
+        """
+        query: str = f"SELECT first_name || ' ' || last_name FROM {self.name} WHERE employee_id = {employee_id}"
         
-        return list(self.run_query(query).itertuples(index=False, name=None))
+        result_df: pd.DataFrame = self.run_query(query)
+        return list(result_df.itertuples(index=False, name=None))
 
-
-    # Below is method with an SQL query
-    # This SQL query generates the data needed for
-    # the machine learning model.
-    # Without editing the query, alter this method
-    # so when it is called, a pandas dataframe
-    # is returns containing the execution of
-    # the sql query
-    def model_data(self, id):
-        # استخدام self.run_query لتنفيذ النص وإرجاع DataFrame مباشرة
-        sql_text = f"""
-                    SELECT SUM(positive_events) positive_events
-                         , SUM(negative_events) negative_events
+    def model_data(self, employee_id: int) -> pd.DataFrame:
+        """
+        Generates aggregated event data for machine learning models.
+        Args:
+            employee_id (int): The unique identifier for the employee.
+        Returns:
+            pd.DataFrame: A DataFrame containing positive and negative event sums.
+        """
+        sql_text: str = f"""
+                    SELECT SUM(positive_events) AS positive_events
+                         , SUM(negative_events) AS negative_events
                     FROM {self.name}
                     JOIN employee_events
                         USING({self.name}_id)
-                    WHERE {self.name}.{self.name}_id = {id}
+                    WHERE {self.name}.{self.name}_id = {employee_id}
                 """
         return self.run_query(sql_text)

@@ -1,8 +1,6 @@
 # Import the QueryBase class
 from .query_base import QueryBase
 
-# Import dependencies for sql execution
-from .sql_execution import SQLExecutionMixin
 
 # Create a subclass of QueryBase
 # called `Team`
@@ -17,7 +15,6 @@ class Team(QueryBase):
     # This method should return
     # a list of tuples from an sql execution
     def names(self):
-        
         # Query 5
         # Write an SQL query that selects
         # the team_name and team_id columns
@@ -25,14 +22,12 @@ class Team(QueryBase):
         # in the database
         query = f"SELECT team_name, team_id FROM {self.name}"
         return list(self.run_query(query).itertuples(index=False, name=None))
-    
 
     # Define a `username` method
     # that receives an ID argument
     # This method should return
     # a list of tuples from an sql execution
     def username(self, id):
-
         # Query 6
         # Write an SQL query
         # that selects the team_name column
@@ -42,7 +37,6 @@ class Team(QueryBase):
         query = f"SELECT team_name FROM {self.name} WHERE team_id = {id}"
         return list(self.run_query(query).itertuples(index=False, name=None))
 
-
     # Below is method with an SQL query
     # This SQL query generates the data needed for
     # the machine learning model.
@@ -51,7 +45,6 @@ class Team(QueryBase):
     # is returns containing the execution of
     # the sql query
     def model_data(self, id):
-        
         sql_text = f"""
             SELECT positive_events, negative_events FROM (
                     SELECT employee_id
@@ -65,3 +58,4 @@ class Team(QueryBase):
                    )
                 """
         return self.run_query(sql_text)
+    

@@ -1,43 +1,42 @@
 from sqlite3 import connect
 from pathlib import Path
 from functools import wraps
+from typing import List, Any
 import pandas as pd
 
 # Absolute path to the database
-db_path = Path(__file__).resolve().parent / "employee_events.db"
+DB_PATH: Path = Path(__file__).resolve().parent / "employee_events.db"
+
 
 class SQLExecutionMixin:
-    
-    def pandas_query(self, sql_query):
-        """الاستعلام باستخدام pandas لإرجاع DataFrame"""
-        connection = connect(db_path)
-        try:
-            return pd.read_sql_query(sql_query, connection)
-        finally:
-            connection.close()
+    """
+    Mixin class to handle SQL executions using both standard
+    sqlite3 and pandas.
+    """
 
-    # أضف هذا السطر تحديداً لحل مشكلة الـ AttributeError
-    # هو مجرد اسم مستعار لكي يفهم ملف employee.py الطلب
+    def pandas_query(self, sql_query: str) -> pd.DataFrame:
+        """Executes a query and returns a pandas DataFrame."""
+        with connect(DB_PATH) as connection:
+            return pd.read_sql_query(sql_query, connection)
+
+    def query(self, sql_query: str) -> List[Any]:
+        """Executes a query and returns a list of tuples."""
+        with connect(DB_PATH) as connection:
+            cursor = connection.cursor()
+            return cursor.execute(sql_query).fetchall()
+
     run_query = pandas_query
 
-    def query(self, sql_query):
-        """الاستعلام العادي لإرجاع قائمة من الـ tuples"""
-        connection = connect(db_path)
-        try:
-            cursor = connection.cursor()
-            result = cursor.execute(sql_query).fetchall()
-            return result
-        finally:
-            connection.close()
 
-# كود الـ Decorator يبقى كما هو بالأسفل...
-def query(func):
+def query_decorator(func):
+    """
+    Decorator to execute a SQL query returned by the decorated function.
+    """
     @wraps(func)
-    def run_query(*args, **kwargs):
-        query_string = func(*args, **kwargs)
-        connection = connect(db_path)
-        cursor = connection.cursor()
-        result = cursor.execute(query_string).fetchall()
-        connection.close()
-        return result
-    return run_query
+    def wrapper(*args, **kwargs) -> List[Any]:
+        query_string: str = func(*args, **kwargs)
+        with connect(DB_PATH) as connection:
+            cursor = connection.cursor()
+            result = cursor.execute(query_string).fetchall()
+            return result
+    return wrapper
