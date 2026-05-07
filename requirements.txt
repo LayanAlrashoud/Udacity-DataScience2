@@ -1,15 +1,11 @@
-scikit-learn==1.5.2
-python-fasthtml==0.8.0
-matplotlib==3.9.2
-scipy==1.14.1
-numpy==2.1.2
-pandas==2.2.3
-pytest
-flake8
-ipython
-<<<<<<< HEAD
-plotly
-=======
-#### Add text to install the python-package here
-pandas
->>>>>>> 61475f512b2347b5efb779a1d99ed8739a448ef4
+fastcore==1.12.44
+matplotlib==3.10.9
+numpy==2.4.4
+pandas==3.0.2
+plotly==6.6.0
+pytest==9.0.3
+python_fasthtml==0.13.4
+scikit_learn==1.8.0
+scipy==1.17.1
+setuptools==82.0.0
+setuptools==65.5.0
