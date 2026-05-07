@@ -1,7 +1,29 @@
 
 # Software Engineering for Data Scientists 
 
-This repository contains starter code for the **Software Engineering for Data Scientists** final project. Please reference your course materials for documentation on this repository's structure and important files. Happy coding!
+# Employee Events & Performance Dashboard
+
+A professional SQL Query API and interactive Dashboard built to track and visualize employee and team performance trends.
+
+## 🚀 PyPI Package
+This project is officially published as a Python package.
+- **PyPI Link:** [employee-events 0.1.0](https://pypi.org/project/employee-events/)
+- **Installation:** `pip install employee-events==0.1.0`
+
+## ✨ Features
+- **Interactive Visualizations:** Powered by **Plotly** for dynamic data exploration.
+- **Machine Learning Integration:** Risk prediction models for performance analysis.
+- **Clean Architecture:** Built using **FastHTML** with a modular component-based structure.
+- **Production Ready:** Fully compliant with **PEP 8** standards and verified via `flake8`.
+
+## 🛠️ Local Setup & Installation
+
+Follow these steps to run the project locally:
+
+1. **Clone the Repository:**
+   ```bash
+   git clone [https://github.com/LayanAlrashoud/Udacity-DataScience2.git](https://github.com/LayanAlrashoud/Udacity-DataScience2.git)
+   cd dsnd-dashboard-project-main
 
 ### Repository Structure
 ```

@@ -7,4 +7,9 @@ pandas==2.2.3
 pytest
 flake8
 ipython
+<<<<<<< HEAD
 plotly
+=======
+#### Add text to install the python-package here
+pandas
+>>>>>>> 61475f512b2347b5efb779a1d99ed8739a448ef4
